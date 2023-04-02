@@ -48,5 +48,32 @@ with open('AmazonWebScrapperDataset.csv', 'a+', newline = '',encoding = 'UTF8') 
     writer = csv.writer(f)
     writer.writerow(data)
 """
+# this functions imports data
+def check_price():
+    URL = 'https://www.amazon.com.tr/Apple-iPhone-14-Pro-512/dp/B0BDJDCMM8/?_encoding=UTF8&pd_rd_w=JChqW&content-id=amzn1.sym.f52080c4-fe7e-4ff6-b933-259f05962808&pf_rd_p=f52080c4-fe7e-4ff6-b933-259f05962808&pf_rd_r=5F30RARZ578MC89NACNF&pd_rd_wg=OPYN4&pd_rd_r=7e6a1487-ab6b-4747-ba65-4aee9cbeb15c&ref_=pd_gw_ci_mcx_mr_hp_atf_m'
+    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"}
+    page = requests.get(URL, headers=headers)
+    soup1 = BeautifulSoup(page.content, "html.parser") # print(soup1)
+    soup2 = BeautifulSoup(soup1.prettify(), "html.parser") # print(soup2)
+    title = soup2.find(id='productTitle').get_text()
+    price = soup2.find("span", attrs={"class":'a-price aok-align-center reinventPricePriceToPayMargin priceToPay'}).find("span",attrs = {"class":'a-price-whole'}).get_text()
+    title = title.strip()
+    price = price.strip()[:-2]
+    import datetime
+    today = datetime.date.today()
+    import csv
+    header = ['Title', 'Price', 'Date']
+    data = [title, price, today]
+    with open('AmazonWebScrapperDataset.csv', 'a+', newline = '',encoding = 'UTF8') as f:
+        writer = csv.writer(f)
+        writer.writerow(data)
 
+# Checks everyday
+while(True):
+    check_price()
+    time.sleep(86400)
 
+# You will have a timeseries in the end
+import pandas as pd
+df = pd.read_csv(r'C:\Users\Eser\Desktop\Python\Amazon Web Scrapping\AmazonWebScrapperDataset.csv')
+print(df)
