@@ -75,4 +75,5 @@ for i in range(333):
     sleep(60) # sleep for 1 minute
 exit()
 
-df
+df_1988 = pd.read_csv(r'C:\Users\Eser\Documents\Python Scripts - VSCode\API.csv')
+df_1988
