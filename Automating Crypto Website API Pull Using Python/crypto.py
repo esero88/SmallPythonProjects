@@ -55,9 +55,15 @@ def api_runner():
     except (ConnectionError, Timeout, TooManyRedirects) as e:
       print(e)
     
-    df2 = pd.json_normalize(data['data'])
-    df2['timestamp'] = pd.to_datetime('now', utc=True)
-    df = df.append(df2)
+    df = pd.json_normalize(data['data'])
+    df['timestamp'] = pd.to_datetime('now', utc=True)
+    df
+    
+    #Checks that file exists or not, if doesn't it is gonna created based on column_headers
+    if not os.path.isfile(r'C:\Users\Eser\Documents\Python Scripts - VSCode\API.csv'):
+        df.to_csv(r'C:\Users\Eser\Documents\Python Scripts - VSCode\API.csv', header='column_names')
+    else:
+        df.to_csv(r'C:\Users\Eser\Documents\Python Scripts - VSCode\API.csv', mode='a', header=False)
 
 import os
 from time import time
